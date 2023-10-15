@@ -10,5 +10,6 @@ namespace Daleya.API.Models
         [Required]
         [MaxLength(50)]
         public required string Name { get; set; }
+        public IEnumerable<Product> Products { get; set; }
     }
 }
