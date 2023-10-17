@@ -20,6 +20,10 @@ namespace Daleya.API.Data
                         .HasMany(c => c.Products)
                         .WithOne(p => p.Category)
                         .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Category>().HasData(new Category {CategoryId = 2, Name = "Drinks" },
+                new Category { CategoryId = 1, Name = "Appetizers" },
+                new Category { CategoryId = 3, Name = "Desserts" });
         }
     }
 }
