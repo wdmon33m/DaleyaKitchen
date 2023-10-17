@@ -15,15 +15,16 @@ namespace Daleya.API.Models
         public string Name { get; set; }
 
         [MaxLength(500)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
 
-        public string ImageUrl { get; set; } = "https://placehold.co/600x400/";
+        public string? ImageUrl { get; set; } = "https://placehold.co/600x400/";
 
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
+        public string? ImageLocalPath { get; set; }
     }
 }

@@ -1,7 +1,21 @@
+using Daleya.WEB.Service;
+using Daleya.WEB.Service.IService;
+using Daleya.WEB.Utility;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<ICategoryService, CategoryService>();
+builder.Services.AddHttpClient<IProductService, ProductService>();
+
+SD.DaleyaApiBase = builder.Configuration["ServiceUrls:DaleyaAPI"];
+
+builder.Services.AddScoped<IBaseService, BaseService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 

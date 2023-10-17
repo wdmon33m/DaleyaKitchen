@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Daleya.API.Models;
 using Daleya.API.Models.Dto;
-using Daleya.API.Models.Dto.Create;
 
 namespace Daleya.API
 {
@@ -11,7 +10,6 @@ namespace Daleya.API
         {
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
-            CreateMap<Product, CreateProductDto>().ReverseMap();
         }
     }
 }

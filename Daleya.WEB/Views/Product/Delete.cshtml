@@ -1,0 +1,60 @@
+﻿@model ProductViewModel
+
+<div class="w-100 card border-0 p-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Delete Product</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body border p-4">
+        <form method="post" asp-action="Delete" class="row" enctype="multipart/form-data">
+            <input asp-for="Product.ProductId" hidden />
+
+            <div class="col-6">
+                <div class="p-3">
+                    <div class="form-floating py-1 col-12">
+                        <input asp-for="Product.Name" disabled class="form-control border shadom" />
+                        <label asp-for="Product.Name" class="ms-2"></label>
+                    </div>
+                    <div class="form-floating py-1 col-12">
+                        <select asp-for="Product.CategoryId" disabled asp-items="@Model.CategoryList" class="form-control border shadom">
+                            <option disabled selected>--Select Villa--</option>
+                        </select>
+                        <label asp-for="Product.CategoryId" class="ms-2"></label>
+                    </div>
+                    <div class="form-floating py-1 col-12">
+                        <input asp-for="Product.Price" disabled class="form-control border shadom" />
+                        <label asp-for="Product.Price" class="ms-2"></label>
+                    </div>
+                    <div class="form-floating py-1 col-12">
+                        <textarea asp-for="Product.Description" disabled class="form-control border shadom">
+                    </textarea>
+                        <label asp-for="Product.Description" class="ms-2"></label>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-6 col-md-3">
+                            <button type="submit" class="btn btn-danger w-100">
+                                <i class="bi bi-trash-fill"></i> Delete
+                            </button>
+                        </div>
+
+                        <div class="col-6 col-md-3">
+                            <a asp-action="Index" class="btn btn-secondary w-100">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <img src="@Model.Product.ImageUrl" width="90%" class="ms-2 m-4"
+                     style="border-radius:10px; border:1px solid #bbb9b9" />
+            </div>
+
+        </form>
+    </div>
+</div>

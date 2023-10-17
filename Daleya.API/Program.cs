@@ -1,9 +1,11 @@
-using AutoMapper;
 using Daleya.API;
 using Daleya.API.Data;
 using Daleya.API.Extentions;
 using Daleya.API.Repository;
 using Daleya.API.Repository.IRepository;
+using Daleya.API.Service;
+using Daleya.API.Service.IService;
+using Daleya.API.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -21,6 +23,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 builder.Services.AddApiVersioning(options =>
 {
@@ -72,6 +75,10 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 var app = builder.Build();
+
+SD.Cloudinary_CloudName = builder.Configuration.GetSection("Cloudinary:CloudName").Get<string>();
+SD.Cloudinary_Secretkey = builder.Configuration.GetSection("Cloudinary:Secretkey").Get<string>();
+SD.Cloudinary_Apikey = builder.Configuration.GetSection("Cloudinary:Key").Get<string>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
