@@ -26,7 +26,8 @@ namespace Daleya.API.Repository
             _dbSet.Update(entity);
             await SaveAsync();
         }
-        public async Task<T> GetAsync(Expression<Func<T, bool>> filter = null, bool tracked = true, string? includeProperties = null)
+        public async Task<T> GetAsync(Expression<Func<T, bool>> filter = null, 
+            bool tracked = true, string? includeProperties = null)
         {
             IQueryable<T> query = _dbSet;
             if (!tracked)
@@ -47,13 +48,19 @@ namespace Daleya.API.Repository
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public async Task<List<T>> GetAllAsync(
+    Expression<Func<T, bool>>? filter = null,
+    string? includeProperties = null,
+    Expression<Func<T, object>>? orderByAscending = null,
+    Expression<Func<T, object>>? orderByDescending = null)
         {
             IQueryable<T> query = _dbSet;
+
             if (filter != null)
             {
                 query = query.Where(filter);
             }
+
             if (includeProperties != null)
             {
                 foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -61,8 +68,20 @@ namespace Daleya.API.Repository
                     query = query.Include(includeProp);
                 }
             }
+
+            if (orderByAscending != null)
+            {
+                query = query.OrderBy(orderByAscending);
+            }
+
+            if (orderByDescending != null)
+            {
+                query = query.OrderByDescending(orderByDescending);
+            }
+
             return await query.ToListAsync();
         }
+
 
         public async Task RemoveAsync(T entity)
         {

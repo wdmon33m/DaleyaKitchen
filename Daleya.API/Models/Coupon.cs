@@ -5,13 +5,13 @@ namespace Daleya.API.Models
     public class Coupon
     {
         [Required]
-        public int CouponID { get; set; }
+        public int CouponId { get; set; }
         [Required]
         public string CouponCode { get; set; }
         [Required]
-        public double DiscountAmount { get; set; }
+        public decimal DiscountAmount { get; set; }
         [Required]
-        public double MinAmount { get; set; }
+        public decimal MinAmount { get; set; }
 
         public DateTime ExpirationDate { get; set; }
     }
