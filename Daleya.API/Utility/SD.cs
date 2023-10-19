@@ -2,6 +2,9 @@
 {
     public static class SD
     {
+        public const string RoleAdmin = "ADMIN";
+        public const string RoleCustomer = "CUSTOMER";
+
         public static string Cloudinary_Secretkey = "";
         public static string Cloudinary_CloudName = "";
         public static string Cloudinary_Apikey = "";

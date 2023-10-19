@@ -1,4 +1,4 @@
-﻿namespace Daleya.API.Models.Dto
+﻿namespace Daleya.WEB.Models.Dto
 {
     public class CouponDto
     {

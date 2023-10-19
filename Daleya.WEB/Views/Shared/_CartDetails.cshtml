@@ -1,0 +1,30 @@
+﻿@model IEnumerable<CartDetailsDto>
+
+<div id="CartDetailsList">
+    @foreach (var cartObj in Model)
+    {
+        <div class="row h-100">
+            <div class="col-4 col-md-2 text-center py-2">
+                <img src="@cartObj.Product.ImageUrl" class="rounded" width="40%" />
+            </div>
+            <div class="col-8 col-md-5">
+                <h5>@cartObj.Product.Name</h5>
+                <div style="font-size:11px;">@Html.Raw(cartObj.Product.Description)</div>
+            </div>
+            <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
+                <span style="font-size:17px;">@string.Format("{0:c}", cartObj.Product.Price)</span>
+            </div>
+            <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
+                <span style="font-size:17px;"> @cartObj.Count</span>
+            </div>
+            <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
+                <a asp-action="IncreaseItem" asp-route-cartDetailsId="@cartObj.CartDetailsId" asp-route-productId="@cartObj.ProductId" class="btn btn-sm btn-success">
+                    <i class="bi bi-plus-circle"></i>
+                </a>
+                <a asp-action="DecreaseItem" asp-route-cartDetailsId="@cartObj.CartDetailsId" asp-route-productId="@cartObj.ProductId" class="btn btn-sm btn-danger">
+                    <i class="bi bi-dash-circle"></i>
+                </a>
+            </div>
+        </div>
+    }
+</div>

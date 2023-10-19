@@ -4,6 +4,7 @@ using Daleya.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Daleya.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231019020642_CreateIdentityTables")]
+    partial class CreateIdentityTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,9 +36,6 @@ namespace Daleya.API.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -341,25 +341,13 @@ namespace Daleya.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f0a9b9b9-8473-42e3-b08b-f859069f0910",
+                            Id = "53a5ac05-330b-4c51-b4a7-ea07ddc316a7",
                             Name = "ADMIN"
                         },
                         new
                         {
-                            Id = "f93e330b-b24a-4b0e-b735-10c5f5004be2",
+                            Id = "f8b1411f-7f2f-4359-a5a9-f62b9657fc45",
                             Name = "CUSTOMER"
-                        },
-                        new
-                        {
-                            Id = "e490ff26-67ad-4cc6-9f25-7e60ec590722",
-                            Name = "ADMIN",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "fe348fe6-0aab-4356-a784-57062821f697",
-                            Name = "CUSTOMER",
-                            NormalizedName = "CUSTOMER"
                         });
                 });
 

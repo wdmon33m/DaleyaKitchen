@@ -63,8 +63,6 @@ namespace Daleya.WEB.Service
                     }
                 }
 
-
-
                 HttpResponseMessage? apiResponse = null;
 
                 switch (requestDto.ApiType)

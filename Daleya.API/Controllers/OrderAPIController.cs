@@ -3,20 +3,19 @@ using Daleya.API.Models;
 using Daleya.API.Models.Dto;
 using Daleya.API.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using System.Net;
 
 namespace Daleya.API.Controllers
 {
-    [Route("api/coupon")]
+    [Route("api/order")]
     [ApiController]
-    public class CouponController : ControllerBase
+    public class OrderAPIController : ControllerBase
     {
         private readonly ICouponRepository _dbCoupon;
         private readonly IOrderHeaderRepository _orderHeaderRepository;
         private readonly ResponseDto _response;
         private IMapper _mapper;
-        public CouponController(ICouponRepository db, IMapper mapper, IOrderHeaderRepository orderHeaderRepository)
+        public OrderAPIController(ICouponRepository db, IMapper mapper, IOrderHeaderRepository orderHeaderRepository)
         {
             _dbCoupon = db;
             _mapper = mapper;
@@ -35,10 +34,16 @@ namespace Daleya.API.Controllers
             try
             {
                 IEnumerable<Coupon> list = await _dbCoupon.GetAllAsync();
+                IEnumerable<OrderHeader> objList;
+                
+                objList = await _orderHeaderRepository.GetAllAsync(includeProperties:"OrderDetails",
+                                                                   orderByDescending:e => e.OrderId);
+                
+                _response.Result = _mapper.Map<IEnumerable<OrderHeaderDto>>(objList);
 
                 if (list is null || list.Count() == 0)
                 {
-                    return _response.NotFound("Coupon table is empty!");
+                    return _response.NotFound("Order table is empty!");
                 }
                 _response.StatusCode = HttpStatusCode.OK;
                 _response.Result = _mapper.Map<IEnumerable<CouponDto>>(list);
@@ -50,6 +55,7 @@ namespace Daleya.API.Controllers
             }
             return _response;
         }
+
         [HttpGet("{id:int}")]
         [MapToApiVersion("1.0")]
         [ResponseCache(CacheProfileName = "Default30")]
@@ -65,11 +71,11 @@ namespace Daleya.API.Controllers
                     return _response.BadRequest("Id 0 is not correct!");
                 }
 
-                var obj = await _dbCoupon.GetAsync(v => v.CouponId == id);
+                var obj = await _orderHeaderRepository.GetAsync(v => v.CouponId == id, includeProperties:"OrderDetails");
 
                 if (obj == null)
                 {
-                    return _response.NotFound("Coupon with id: " + id + " not found");
+                    return _response.NotFound("Order with id: " + id + " not found");
                 }
 
                 _response.Result = _mapper.Map<CouponDto>(obj);
@@ -82,28 +88,22 @@ namespace Daleya.API.Controllers
             return _response;
         }
 
-        [HttpPost("{CouponName}")]
+        [HttpPost("{CouponCode}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ResponseDto> Post(string couponCode)
+        public async Task<ResponseDto> Post([FromBody] CartDto cartDto)
         {
             try
             {
-                if (await _dbCoupon.GetAsync(u => u.CouponCode.ToLower() == couponCode.ToLower()) != null)
-                {
-                    return _response.BadRequest("Coupon is Already Exists!");
-                }
-                if (couponCode.IsNullOrEmpty())
-                {
-                    return _response.NotFound("You must enter Coupon name");
-                }
+                OrderHeaderDto orderHeaderDto = _mapper.Map<OrderHeaderDto>(cartDto.CartHeaderDto);
+                orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailsDto>>(cartDto.CartDetailsDto);
 
-                Coupon obj = new() { CouponCode = couponCode };
+                OrderHeader orderCreated = _mapper.Map<OrderHeader>(orderHeaderDto);
 
-                await _dbCoupon.CreateAsync(obj);
+                await _orderHeaderRepository.CreateAsync(orderCreated);
 
-                _response.Result = _mapper.Map<CouponDto>(obj);
+                _response.Result = _mapper.Map<OrderHeaderDto>(orderCreated);
                 _response.StatusCode = HttpStatusCode.Created;
             }
             catch (Exception ex)

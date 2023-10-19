@@ -10,6 +10,7 @@ namespace Daleya.API
         {
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<Coupon, CouponDto>().ReverseMap();
 
             CreateMap<OrderHeader, OrderHeaderDto>().ReverseMap();
             CreateMap<OrderDetails, OrderDetailsDto>().ReverseMap();

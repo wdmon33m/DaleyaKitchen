@@ -45,8 +45,7 @@ namespace Daleya.API.Controllers
             }
             catch (Exception ex)
             {
-                _response.IsSuccess = false;
-                _response.ErrorMessage = ex.Message;
+                _response.InternalServerError(ex.Message);
             }
             return _response;
         }
@@ -76,8 +75,7 @@ namespace Daleya.API.Controllers
             }
             catch (Exception ex)
             {
-                _response.IsSuccess = false;
-                _response.ErrorMessage = ex.Message;
+                _response.InternalServerError(ex.Message);
             }
             return _response;
         }
