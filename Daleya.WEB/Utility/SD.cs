@@ -4,6 +4,8 @@
     { 
         public static string DaleyaApiBase { get; set; }
 
+        public const string TokenCookie = "JWTToken";
+
         public const string RoleAdmin = "ADMIN";
         public const string RoleCustomer = "CUSTOMER";
         public enum ApiType

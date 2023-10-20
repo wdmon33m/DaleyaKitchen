@@ -1,30 +1,29 @@
 ﻿@model IEnumerable<CartDetailsDto>
 
-<div id="CartDetailsList">
-    @foreach (var cartObj in Model)
-    {
-        <div class="row h-100">
-            <div class="col-4 col-md-2 text-center py-2">
-                <img src="@cartObj.Product.ImageUrl" class="rounded" width="40%" />
+<div class="container">
+    <div class="row">
+        @foreach (var cartObj in Model)
+        {
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="card">
+                    <img src="@cartObj.Product.ImageUrl" class="card-img-top" alt="@cartObj.Product.Name">
+                    <div class="card-body">
+                        <h5 class="card-title">@cartObj.Product.Name</h5>
+                        <p class="card-text">@Html.Raw(cartObj.Product.Description)</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-success">@string.Format("{0:c}", cartObj.Product.Price)</span>
+                            <div class="badge bg-primary">@cartObj.Count</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="IncreaseItem" asp-route-cartDetailsId="@cartObj.CartDetailsId" asp-route-productId="@cartObj.ProductId" class="btn btn-success"><i class="bi bi-plus-circle"></i> Increase</a>
+                            <span class="mx-2"></span> <!-- Add spacing between buttons -->
+                            <a asp-action="DecreaseItem" asp-route-cartDetailsId="@cartObj.CartDetailsId" asp-route-productId="@cartObj.ProductId" class="btn btn-danger"><i class="bi bi-dash-circle"></i> Decrease</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-8 col-md-5">
-                <h5>@cartObj.Product.Name</h5>
-                <div style="font-size:11px;">@Html.Raw(cartObj.Product.Description)</div>
-            </div>
-            <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
-                <span style="font-size:17px;">@string.Format("{0:c}", cartObj.Product.Price)</span>
-            </div>
-            <div class="col-3 col-md-2 pt-md-4" style="font-size:11px;">
-                <span style="font-size:17px;"> @cartObj.Count</span>
-            </div>
-            <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
-                <a asp-action="IncreaseItem" asp-route-cartDetailsId="@cartObj.CartDetailsId" asp-route-productId="@cartObj.ProductId" class="btn btn-sm btn-success">
-                    <i class="bi bi-plus-circle"></i>
-                </a>
-                <a asp-action="DecreaseItem" asp-route-cartDetailsId="@cartObj.CartDetailsId" asp-route-productId="@cartObj.ProductId" class="btn btn-sm btn-danger">
-                    <i class="bi bi-dash-circle"></i>
-                </a>
-            </div>
-        </div>
-    }
+        }
+    </div>
 </div>

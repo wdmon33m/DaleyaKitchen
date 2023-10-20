@@ -1,4 +1,4 @@
-﻿namespace Daleya.API.Models.Dto
+﻿namespace Daleya.API.Models.Dto.Cart
 {
     public class Cart
     {

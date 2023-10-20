@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Daleya.API.Models;
 using Daleya.API.Models.Dto;
+using Daleya.API.Models.Dto.Cart;
 
 namespace Daleya.API
 {
@@ -16,8 +17,11 @@ namespace Daleya.API
             CreateMap<OrderDetails, OrderDetailsDto>().ReverseMap();
 
             CreateMap<Cart, CartDto>().ReverseMap();
+            CreateMap<Cart, CreateCartDto>().ReverseMap();
             CreateMap<CartHeader, CartHeaderDto>().ReverseMap();
+            CreateMap<CartHeader, CreateCartHeaderDto>().ReverseMap();
             CreateMap<CartDetails, CartDetailsDto>().ReverseMap();
+            CreateMap<CartDetails, CreateCartDetailsDto>().ReverseMap();
 
             CreateMap<OrderHeaderDto, CartHeaderDto>()
             .ForMember(dest => dest.CartTotal, u => u.MapFrom(src => src.TotalAmount))

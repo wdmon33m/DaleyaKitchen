@@ -1,4 +1,4 @@
-﻿namespace Daleya.WEB.Models.Dto
+﻿namespace Daleya.WEB.Models.Dto.Cart
 {
     public class CartHeaderDto
     {

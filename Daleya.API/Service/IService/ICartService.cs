@@ -1,4 +1,5 @@
 ﻿using Daleya.API.Models.Dto;
+using Daleya.API.Models.Dto.Cart;
 
 namespace Daleya.API.Service.IService
 {

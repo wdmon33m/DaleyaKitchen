@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<ProductDto>
-
 <form>
     @foreach (var categoryGroup in Model.GroupBy(p => p.Category.CategoryId))
     {
@@ -21,6 +20,10 @@
                                 </div>
                                 <p class="card-text">@Html.Raw(product.Description)</p>
                                 <div class="row">
+                                    <div class="col">
+                                        <a asp-action="UpsertCart" asp-route-productId="@product.ProductId"
+                                           class="btn btn-success form-control"><i class="bi bi-plus-circle"></i> Add</a>
+                                    </div>
                                     <div class="col">
                                         <a asp-action="" asp-route-productId="@product.ProductId"
                                            class="btn btn-info form-control"><i class="bi bi-info-circle-fill"></i> Details</a>

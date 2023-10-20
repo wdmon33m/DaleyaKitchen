@@ -24,6 +24,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        
+                        @if (User.IsInRole(SD.RoleAdmin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Content Management
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" asp-controller="Product" asp-action="Index">Product</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Coupon" asp-action="CouponIndex">Coupon</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Role" asp-action="RoleIndex">Roles</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                </ul>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
                                 &nbsp; <i class="bi bi-cart"></i> &nbsp;
@@ -31,17 +46,17 @@
                         </li>
                     </ul>
                 </div>
+                <partial name="_LoginPartial">
             </div>
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-5">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="footer bg-dark text-light text-center position-static pb-3">
-        <br />
+    <footer class="footer bg-dark text-light text-center" >
         <div class="text-center">
             <p>Made by wdmon3m</p>
             <p><i class="bi bi-envelope-at"></i> wdmon33m@gmail.com</p>

@@ -1,5 +1,5 @@
 ﻿using Daleya.WEB.Models;
-using Daleya.WEB.Models.Dto;
+using Daleya.WEB.Models.Dto.Cart;
 using Daleya.WEB.Service.IService;
 using Daleya.WEB.Utility;
 
@@ -24,13 +24,13 @@ namespace Daleya.WEB.Service
             });
         }
 
-        public async Task<ResponseDto?> CartUpsert(CartDto cartDto)
+        public async Task<ResponseDto?> CartUpsert(CreateCartDto cartDto)
         {
             return await _baseService.SendAsync(new RequestDto()
             {
                 ApiType = SD.ApiType.POST,
                 Data = cartDto,
-                Url = SD.DaleyaApiBase + cartApiUrl + "CartUpsert"
+                Url = SD.DaleyaApiBase + cartApiUrl
             });
         }
 

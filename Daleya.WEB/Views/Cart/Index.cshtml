@@ -2,74 +2,56 @@
 
 @if (Model.CartHeader != null && Model.CartDetails?.Count() > 0)
 {
-    <form method="post">
+    <form method="post" class="font-monospace">
         <br />
         <input asp-for="CartHeader.UserId" hidden />
         <input asp-for="CartHeader.CartTotal" hidden />
-        <div class="">
-            <div class="card border-2 mt-4 container">
-                <div class="card-header bg-primary bg-gradient text-white ml-0 row ">
-                    <div class="col-6">
-                        <h3 class="text-white"><i class="bi bi-cart"></i> &nbsp; Shopping Cart</h3>
+        <div>
+            <div class="card border-2 mb-0 container">
+                <div class="card-header bg-primary bg-gradient text-white row">
+                    <div class="col-lg-6 col-md-8 col-sm-6 text-md-center text-lg-start">
+                        <h3 class="text-white"><i class="bi bi-cart"></i> Shopping Cart</h3>
                     </div>
-                    <div class="col-6 text-end">
+                    <div class="col-lg-6 col-md-4 col-sm-6 text-md-center text-lg-end">
                         <a asp-action="Index" asp-controller="Home" class="btn btn-outline-warning mt-2 btn-sm">Continue Shopping</a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class=" d-none d-lg-block">
-                        <div class="row text-info">
-                            <div class="col-lg-2">
-                            </div>
-                            <div class="col-lg-5">
-                                Product Details
-                            </div>
-                            <div class="col-lg-2">
-                                Price
-                            </div>
-                            <div class="col-lg-2">
-                                Count
-                            </div>
-                            <div class="col-lg-1">
-                            </div>
-                        </div>
-                    </div>
                     <hr />
 
                     <partial name="_CartDetails" model="Model.CartDetails" />
 
                     <hr />
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12 col-md-6 col-sm-4 justify-content-between">
                             @if (string.IsNullOrEmpty(Model.CartHeader.CouponCode))
                             {
                                 <span>Coupon:</span>
                                 <input asp-for="CartHeader.CouponCode" />
-                                <button type="submit" asp-action="ApplyCoupon" class="btn btn-sm btn-success"> Apply </button>
+                                <button type="submit" asp-action="ApplyCoupon" class="btn btn-sm btn-success text-center">Apply</button> <!-- Center-align the button -->
                             }
                             else
                             {
                                 <span>Coupon:</span>
                                 <input asp-for="CartHeader.CouponCode" disabled />
-                                <button type="submit" asp-action="RemoveCoupon" class="btn btn-sm btn-success"> Remove </button>
+                                <button type="submit" asp-action="RemoveCoupon" class="btn btn-sm btn-success">Remove</button>
                             }
-
                         </div>
-                        <div class="col-6 text-end">
-                            <span class="text-danger" style="font-size:21px;">  Order Total : @string.Format("{0:c}",Model.CartHeader.CartTotal) <br /></span>
+                        <div class="col-12 col-md-6 col-sm-4 text-center">
+                            <span class="text-danger" style="font-size: 21px;">Order Total: @string.Format("{0:c}", Model.CartHeader.CartTotal) <br /></span>
                             @if (Model.CartHeader.Discound > 0)
                             {
-                                <span class="text-success"> Order Discount :  @string.Format("{0:c}",Model.CartHeader.Discound) </span>
+                                <span class="text-success">Order Discount: @string.Format("{0:c}", Model.CartHeader.Discound)</span>
                             }
                         </div>
                     </div>
                 </div>
                 <div class="card-footer row">
-                    <div class="col-6 col-md-3 ">
+                    <div class="col-lg-4 col-md-4 col-sm-2">
                         <button type="submit" class="btn btn-outline-danger form-control">Email Cart</button>
                     </div>
-                    <div class="col-6 col-md-3 offset-md-6">
-                        <a asp-action="CheckOut" class="btn btn-success form-control">Looks Good?"</a>
+                    <div class="col-lg-4 col-md-4 offset-lg-4 col-sm-2 offset-sm-2">
+                        <a asp-action="CheckOut" class="btn btn-success form-control">Looks Good?</a> <!-- Add margin for mobile version -->
                     </div>
                 </div>
             </div>

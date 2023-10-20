@@ -1,8 +1,9 @@
 ﻿using Daleya.WEB.Models;
-using Daleya.WEB.Models.Dto;
+using Daleya.WEB.Models.Dto.Cart;
 using Daleya.WEB.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Daleya.WEB.Controllers
 {
@@ -59,7 +60,7 @@ namespace Daleya.WEB.Controllers
         
         private async Task<CartDto> LoadCartDtoBasedOnLoggedInUser()
         {
-            var userId = "1";//User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
+            var userId = User.Claims.Where(u => u.Type == JwtRegisteredClaimNames.Sub)?.FirstOrDefault()?.Value;
             ResponseDto? response = await _cartService.GetCartAsync(userId);
 
             if (response != null && response.IsSuccess)

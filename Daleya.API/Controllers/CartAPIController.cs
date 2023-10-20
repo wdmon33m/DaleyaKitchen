@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Daleya.API.Models;
 using Daleya.API.Models.Dto;
+using Daleya.API.Models.Dto.Cart;
 using Daleya.API.Repository.IRepository;
 using Daleya.API.Service.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -35,13 +36,13 @@ namespace Daleya.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ResponseDto> Post([FromBody]CartDto cartDto)
+        public async Task<ResponseDto> Post([FromBody]CreateCartDto cartDto)
         {
             try
             {
                 Cart cart = new();
-                cart.CartHeader = _mapper.Map<CartHeader>(cartDto.CartHeaderDto);
-                cart.CartDetails = _mapper.Map<IEnumerable<CartDetails>>(cartDto.CartDetailsDto);
+                cart.CartHeader = _mapper.Map<CartHeader>(cartDto.CartHeader);
+                cart.CartDetails = _mapper.Map<IEnumerable<CartDetails>>(cartDto.CartDetails);
 
                 if (cart.CartHeader is null)
                 {

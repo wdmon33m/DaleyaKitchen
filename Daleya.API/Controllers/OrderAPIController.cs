@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Daleya.API.Models;
 using Daleya.API.Models.Dto;
+using Daleya.API.Models.Dto.Cart;
 using Daleya.API.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -96,8 +97,8 @@ namespace Daleya.API.Controllers
         {
             try
             {
-                OrderHeaderDto orderHeaderDto = _mapper.Map<OrderHeaderDto>(cartDto.CartHeaderDto);
-                orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailsDto>>(cartDto.CartDetailsDto);
+                OrderHeaderDto orderHeaderDto = _mapper.Map<OrderHeaderDto>(cartDto.CartHeader);
+                orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailsDto>>(cartDto.CartDetails);
 
                 OrderHeader orderCreated = _mapper.Map<OrderHeader>(orderHeaderDto);
 

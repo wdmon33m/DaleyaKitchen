@@ -1,5 +1,6 @@
 ﻿using Daleya.API.Models;
 using Daleya.API.Models.Dto;
+using Daleya.API.Models.Dto.Cart;
 using Daleya.API.Repository.IRepository;
 using Daleya.API.Service.IService;
 using System.Net;
@@ -269,12 +270,14 @@ namespace Daleya.API.Service
                     return _response.BadRequest("Cart is empty!");
                 }
 
-                if (cartDetails.Count == 1 && totalCountOfCartItems == 1)
+                if (cartDetails.Count == 1)
                 {
                     await _cartDetailRepository.RemoveAsync(cartDetails);
-
-                    var cartHeaderToRemove = await _cartHeaderRepository.GetAsync(u => u.CartHeaderId == cartDetails.CartHeaderId);
-                    await _cartHeaderRepository.RemoveAsync(cartHeaderToRemove);
+                    if (totalCountOfCartItems == 1)
+                    {
+                        var cartHeaderToRemove = await _cartHeaderRepository.GetAsync(u => u.CartHeaderId == cartDetails.CartHeaderId);
+                        await _cartHeaderRepository.RemoveAsync(cartHeaderToRemove);
+                    }
                 }
                 else
                 {
