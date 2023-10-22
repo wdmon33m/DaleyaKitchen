@@ -4,6 +4,7 @@ using Daleya.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Daleya.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231021202219_UpdateDisCountToDecimalA")]
+    partial class UpdateDisCountToDecimalA
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,6 +230,8 @@ namespace Daleya.API.Migrations
 
                     b.HasIndex("OrderId");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("OrderDetails");
                 });
 
@@ -239,6 +244,7 @@ namespace Daleya.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
                     b.Property<int?>("CouponId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<decimal>("Discound")
@@ -262,16 +268,10 @@ namespace Daleya.API.Migrations
                     b.Property<TimeOnly>("OrderTime")
                         .HasColumnType("time");
 
-                    b.Property<string>("PaymentIntenId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StripeSessionId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalAmount")
@@ -350,6 +350,30 @@ namespace Daleya.API.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1963d083-2fd0-460c-be0c-6f1a277c7d27",
+                            Name = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "7d7877fe-66ac-43c8-b2b6-63e14cb127da",
+                            Name = "CUSTOMER"
+                        },
+                        new
+                        {
+                            Id = "d21b6fcb-448a-4efc-96c5-a383aa3a62ba",
+                            Name = "ADMIN",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "fecbe59d-f174-4cab-b8cd-d1c2e1b3de3f",
+                            Name = "CUSTOMER",
+                            NormalizedName = "CUSTOMER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -466,14 +490,24 @@ namespace Daleya.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Daleya.API.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("OrderHeader");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Daleya.API.Models.OrderHeader", b =>
                 {
                     b.HasOne("Daleya.API.Models.Coupon", "Coupon")
                         .WithMany()
-                        .HasForeignKey("CouponId");
+                        .HasForeignKey("CouponId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Coupon");
                 });

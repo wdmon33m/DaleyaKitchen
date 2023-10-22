@@ -12,6 +12,8 @@ namespace Daleya.API.Models
         [NotMapped]
         public decimal Discound { get; set; }
         [NotMapped]
+        public bool IsPaid { get; set; } = false;
         public decimal CartTotal { get; set;}
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

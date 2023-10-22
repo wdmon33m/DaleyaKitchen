@@ -34,11 +34,11 @@ namespace Daleya.WEB.Service
                 }
 
                 //token
-                //if (withBearer)
-                //{
-                 //   var token = _tokenProvider.GetToken();
-                   // message.Headers.Add("Authorization", $"Bearer {token}");
-                //}
+                if (withBearer)
+                {
+                    var token = _tokenProvider.GetToken();
+                    message.Headers.Add("Authorization", $"Bearer {token}");
+                }
 
                 message.RequestUri = new Uri(requestDto.Url);
 

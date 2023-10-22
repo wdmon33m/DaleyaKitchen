@@ -2,6 +2,7 @@
 using Daleya.API.Models;
 using Daleya.API.Models.Dto;
 using Daleya.API.Models.Dto.Cart;
+using Daleya.API.Models.Dto.Order;
 
 namespace Daleya.API
 {
@@ -31,7 +32,8 @@ namespace Daleya.API
 
             CreateMap<CartDetailsDto, OrderDetailsDto>()
             .ForMember(dest => dest.ProductName, u => u.MapFrom(src => src.Product.Name))
-            .ForMember(dest => dest.Price, u => u.MapFrom(src => src.Product.Price));
+            .ForMember(dest => dest.Price, u => u.MapFrom(src => src.Product.Price))
+            .ForMember(dest => dest.Quantity, u => u.MapFrom(src => src.Count));
         }
     }
 }

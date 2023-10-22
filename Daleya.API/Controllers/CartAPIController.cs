@@ -2,7 +2,6 @@
 using Daleya.API.Models;
 using Daleya.API.Models.Dto;
 using Daleya.API.Models.Dto.Cart;
-using Daleya.API.Repository.IRepository;
 using Daleya.API.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 

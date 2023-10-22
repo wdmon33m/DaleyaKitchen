@@ -24,15 +24,6 @@ namespace Daleya.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
-            {
-                Name = SD.RoleAdmin
-            });
-            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
-            {
-                Name = SD.RoleCustomer
-            });
-
             modelBuilder.Entity<Category>()
                         .HasMany(c => c.Products)
                         .WithOne(p => p.Category)
@@ -42,9 +33,9 @@ namespace Daleya.API.Data
                 new Category { CategoryId = 1, Name = "Appetizers" },
                 new Category { CategoryId = 3, Name = "Desserts" });
 
-            modelBuilder.Entity<IdentityRole>().HasData(
-               new IdentityRole { Name = SD.RoleAdmin, NormalizedName = SD.RoleAdmin },
-               new IdentityRole { Name = SD.RoleCustomer, NormalizedName = SD.RoleCustomer });
+            //modelBuilder.Entity<IdentityRole>().HasData(
+            //   new IdentityRole { Name = SD.RoleAdmin, NormalizedName = SD.RoleAdmin },
+            //   new IdentityRole { Name = SD.RoleCustomer, NormalizedName = SD.RoleCustomer });
 
         }
     }

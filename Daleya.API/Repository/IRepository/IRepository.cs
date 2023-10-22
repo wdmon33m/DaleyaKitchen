@@ -9,6 +9,7 @@ namespace Daleya.API.Repository.IRepository
             Expression<Func<T, object>>? orderByDescending = null);
         Task<T> GetAsync(Expression<Func<T, bool>> filter = null, bool tracked = true, string? includeProperties = null);
         Task CreateAsync(T entity);
+        Task AddRangeAsync(IEnumerable<T> entity);
         Task RemoveAsync(T entity);
         Task SaveAsync();
     }

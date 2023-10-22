@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-using Daleya.API.Models;
 using Daleya.API.Models.Dto;
 using Daleya.API.Models.Dto.Cart;
-using Daleya.API.Repository.IRepository;
+using Daleya.API.Models.Dto.Order;
+using Daleya.API.Service.IService;
+using Daleya.API.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace Daleya.API.Controllers
 {
@@ -12,138 +13,76 @@ namespace Daleya.API.Controllers
     [ApiController]
     public class OrderAPIController : ControllerBase
     {
-        private readonly ICouponRepository _dbCoupon;
-        private readonly IOrderHeaderRepository _orderHeaderRepository;
-        private readonly ResponseDto _response;
-        private IMapper _mapper;
-        public OrderAPIController(ICouponRepository db, IMapper mapper, IOrderHeaderRepository orderHeaderRepository)
+        private readonly IOrderService _orderService;
+        public OrderAPIController(IOrderService orderService)
         {
-            _dbCoupon = db;
-            _mapper = mapper;
-            _response = new();
-            _orderHeaderRepository = orderHeaderRepository;
+            _orderService = orderService;
         }
 
-        [HttpGet]
+        [HttpGet("{userId}")]
         [MapToApiVersion("1.0")]
         [ResponseCache(CacheProfileName = "Default30")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ResponseDto> Get()
+        public async Task<ResponseDto> Get(string userId)
         {
-            try
+            if(User.IsInRole(SD.RoleAdmin))
             {
-                IEnumerable<Coupon> list = await _dbCoupon.GetAllAsync();
-                IEnumerable<OrderHeader> objList;
-                
-                objList = await _orderHeaderRepository.GetAllAsync(includeProperties:"OrderDetails",
-                                                                   orderByDescending:e => e.OrderId);
-                
-                _response.Result = _mapper.Map<IEnumerable<OrderHeaderDto>>(objList);
+                return await _orderService.GetAllAsync();
+            }
 
-                if (list is null || list.Count() == 0)
-                {
-                    return _response.NotFound("Order table is empty!");
-                }
-                _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = _mapper.Map<IEnumerable<CouponDto>>(list);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.ErrorMessage = ex.Message;
-            }
-            return _response;
+            return await _orderService.GetAllAsync(userId);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{orderHeaderId:int}")]
         [MapToApiVersion("1.0")]
         [ResponseCache(CacheProfileName = "Default30")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ResponseDto> Get(int id)
+        public async Task<ResponseDto> Get(int orderHeaderId)
         {
-            try
-            {
-                if (id == 0)
-                {
-                    return _response.BadRequest("Id 0 is not correct!");
-                }
-
-                var obj = await _orderHeaderRepository.GetAsync(v => v.CouponId == id, includeProperties:"OrderDetails");
-
-                if (obj == null)
-                {
-                    return _response.NotFound("Order with id: " + id + " not found");
-                }
-
-                _response.Result = _mapper.Map<CouponDto>(obj);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.ErrorMessage = ex.Message;
-            }
-            return _response;
+            return await _orderService.GetByOrderIdAsync(orderHeaderId);
         }
 
-        [HttpPost("{CouponCode}")]
+        [HttpPut("UpdateStatus/{orderId},{newStatus}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ResponseDto> UpdateStatus(int orderId, string newStatus)
+        {
+            return await _orderService.UpdateOrderStatus(orderId, newStatus);
+        }
+
+
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ResponseDto> Post([FromBody] CartDto cartDto)
         {
-            try
-            {
-                OrderHeaderDto orderHeaderDto = _mapper.Map<OrderHeaderDto>(cartDto.CartHeader);
-                orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailsDto>>(cartDto.CartDetails);
+            return await _orderService.CreateOrder(cartDto);
+        }
 
-                OrderHeader orderCreated = _mapper.Map<OrderHeader>(orderHeaderDto);
-
-                await _orderHeaderRepository.CreateAsync(orderCreated);
-
-                _response.Result = _mapper.Map<OrderHeaderDto>(orderCreated);
-                _response.StatusCode = HttpStatusCode.Created;
-            }
-            catch (Exception ex)
-            {
-                _response.InternalServerError(ex.Message);
-            }
-            return _response;
+        [Authorize]
+        [HttpPost("CreateStripeSession")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ResponseDto> CreateStripeSession([FromBody] StripeRequestDto stripeRequestDto)
+        {
+            return await _orderService.CreateStripeSession(stripeRequestDto);
         }
 
 
-        [HttpDelete("{id:int}")]
+        [HttpPost("ValidateStripeSession")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ResponseDto> Delete(int id)
+        public async Task<ResponseDto> ValidateStripeSession([FromBody] int orderHeaderId)
         {
-            try
-            {
-                var obj = await _dbCoupon.GetAsync(u => u.CouponId == id);
-                if (obj == null)
-                {
-                    return _response.NotFound("Coupon is not Exists!");
-                }
-
-                var product = await _orderHeaderRepository.GetAsync(p => p.CouponId == id);
-                if (product != null)
-                {
-                    return _response.BadRequest("Cannot delete the Coupon because it has associated products.");
-                }
-
-                await _dbCoupon.RemoveAsync(obj);
-                _response.Result = "Coupon has been deleted successfully.";
-                _response.StatusCode = HttpStatusCode.OK;
-            }
-            catch (Exception ex)
-            {
-                _response.InternalServerError(ex.Message);
-            }
-            return _response;
+           return await _orderService.ValidateStripeSession(orderHeaderId);
         }
     }
 }

@@ -1,39 +1,80 @@
 ﻿@model IEnumerable<ProductDto>
+
 <form>
+    <!-- Cart details will be displayed here -->
     @foreach (var categoryGroup in Model.GroupBy(p => p.Category.CategoryId))
     {
-        <div class="container row">
+        <div class="container row" id="cart-details">
             <div class="col-12 text-center">
                 <h2 class="bg-primary text-white p-2 rounded">@categoryGroup.First().Category.Name</h2>
             </div>
-            @foreach (var product in categoryGroup)
-            {
-                <div class="col-12 col-md-6 col-lg-4 col-sm-2">
-                    <div class="p-0 my-3 border rounded">
-                        <div class="card">
-                            <h3 class="card-title text-dark-50 text-center py-2">@product.Name</h3>
-                            <img src="@product.ImageUrl" class="card-img-top">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-center py-2">
-                                    <span class="text-primary" style="font-size:25px; font-weight: bold;">@string.Format("{0:c}", product.Price)</span>
-                                    @*<span class="badge bg-secondary bg-gradient text-center text-capitalize">@product.Category.Name</span>*@
-                                </div>
-                                <p class="card-text">@Html.Raw(product.Description)</p>
-                                <div class="row">
-                                    <div class="col">
-                                        <a asp-action="UpsertCart" asp-route-productId="@product.ProductId"
-                                           class="btn btn-success form-control"><i class="bi bi-plus-circle"></i> Add</a>
+                @foreach (var product in categoryGroup)
+                {
+                    <div class="col-sm-12 col-md-4 col-lg-3">
+                        <div class="p-0 my-3 border rounded">
+                            <div class="card">
+                                <h3 class="card-title text-dark-50 text-center py-2">@product.Name</h3>
+                                <img src="@product.ImageUrl" class="h-25 card-img-top">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-center py-2">
+                                        <span class="text-primary" style="font-size:25px; font-weight: bold;">@string.Format("{0:c}", product.Price)</span>
                                     </div>
-                                    <div class="col">
-                                        <a asp-action="" asp-route-productId="@product.ProductId"
-                                           class="btn btn-info form-control"><i class="bi bi-info-circle-fill"></i> Details</a>
+                                    <p class="card-text">@Html.Raw(product.Description)</p>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row">
+                                        <div class="col">
+                                            <a asp-action="UpsertCart" asp-route-productId="@product.ProductId"
+                                               data-product-id="@product.ProductId" class="btn btn-success form-control"><i class="bi bi-plus-circle"></i> Add</a>
+                                        </div>
+                                        <div class="col">
+                                            <a asp-action="" asp-route-productId="@product.ProductId"
+                                               class="btn btn-info form-control"><i class="bi bi-info-circle-fill"></i> Details</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
         </div>
     }
+    <div id="cart-message">
+        <!-- Success and error messages will be displayed here -->
+    </div>
 </form>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            // Attach a click event handler to the "Add" button
+            $('a.btn-success').click(function (e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                var productId = $(this).data('product-id'); // Get the product ID
+
+                // Send an AJAX request to the server
+                $.ajax({
+                    url: '@Url.Action("UpsertCart","Home")', // Replace with the correct URL
+                    method: 'POST',
+                    data: { productId: productId },
+                    success: function (data) {
+                        if (data.success) {
+                            @TempData["success"]
+                            // Display a success message
+                            $('#cart-message').html('<div class="alert alert-success"></div>');
+                            // You can also update other parts of the UI if needed
+                        } else if (data.error) {
+                            // Display an error message
+                            $('#cart-message').html('<div class="alert alert-danger">' + data.error + '</div>');
+                        }
+                    },
+                    error: function () {
+                        // Handle any AJAX errors here
+                        $('#cart-message').html('<div class="alert alert-danger">An error occurred during the request.</div>');
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -94,5 +94,11 @@ namespace Daleya.API.Repository
         {
             await _db.SaveChangesAsync();
         }
+
+        public async Task AddRangeAsync(IEnumerable<T> entity)
+        {
+            await _dbSet.AddRangeAsync(entity);
+            await SaveAsync();
+        }
     }
 }

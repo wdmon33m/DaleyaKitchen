@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Daleya.API.Models.Dto;
 
 namespace Daleya.API.Models
 {
@@ -10,9 +11,9 @@ namespace Daleya.API.Models
 
         public int Quantity { get; set; }
 
-        [ForeignKey("Product")]
         public int ProductId { get; set; }
-        public Product Product { get; set; }
+        [NotMapped]
+        public ProductDto Product { get; set; }
 
         [ForeignKey("OrderHeader")]
         public int OrderId { get; set; }

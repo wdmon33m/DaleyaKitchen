@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Daleya.WEB.Controllers
 {
@@ -41,6 +40,7 @@ namespace Daleya.WEB.Controllers
 
             return View(list);
         }
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> UpsertCart(int productId)
         {
@@ -65,10 +65,9 @@ namespace Daleya.WEB.Controllers
                 int cartDetialId = cartDetailFromDb.CartDetailsId;
 
                 ResponseDto? result = await _cartService.IncreaseItem(cartDetialId, productId);
-                if (response != null && response.IsSuccess)
+                if (result != null && result.IsSuccess)
                 {
-                    TempData["success"] = "Added to Cart!";
-                    return RedirectToAction(nameof(Index));
+                    return Json(new { success = "Added to Cart", cart = cart }); // Return cart details as JSON
                 }
             }
             else
@@ -84,18 +83,17 @@ namespace Daleya.WEB.Controllers
                 var resultFromDb = await _cartService.CartUpsert(cart);
                 if (resultFromDb == null || !resultFromDb.IsSuccess)
                 {
-                    TempData["error"] = resultFromDb?.ErrorMessage;
-                    return RedirectToAction(nameof(Index));
+                    return Json(new { error = resultFromDb?.ErrorMessage });
                 }
                 else
                 {
-                    TempData["success"] = "Added to Cart!";
-                    return RedirectToAction(nameof(Index));
+                    return Json(new { success = "Added to Cart",cart = cart }); // Return cart details as JSON
                 }
             }
 
-            return RedirectToAction(nameof(Index));
+            return Json(new { error = "Something went wrong." });
         }
+
         public IActionResult Privacy()
         {
             return View();
