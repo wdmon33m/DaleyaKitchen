@@ -137,7 +137,7 @@ namespace Daleya.WEB.Controllers
             {
                 // get stripe session and redirect to stripe to place order
                 var domain = Request.Scheme + "://" + Request.Host.Value + "/";
-
+                
                 StripeRequestDto stripeRequestDto = new()
                 {
                     ApprovedUrl = domain + "cart/Confirmation?orderId=" + orderHeaderDto.OrderId,
@@ -159,7 +159,6 @@ namespace Daleya.WEB.Controllers
             return View(updatedCart);
         }
 
-        [Authorize]
         public async Task<IActionResult> Confirmation(int orderId)
         {
             ResponseDto? response = await _orderService.ValidateStripeSession(orderId);

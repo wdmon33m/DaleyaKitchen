@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Daleya.API.Models.Dto;
+﻿using Daleya.API.Models.Dto;
 using Daleya.API.Models.Dto.Cart;
 using Daleya.API.Models.Dto.Order;
 using Daleya.API.Service.IService;
@@ -65,7 +64,6 @@ namespace Daleya.API.Controllers
             return await _orderService.CreateOrder(cartDto);
         }
 
-        [Authorize]
         [HttpPost("CreateStripeSession")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

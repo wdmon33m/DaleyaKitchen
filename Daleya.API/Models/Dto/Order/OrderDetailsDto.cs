@@ -9,9 +9,8 @@
         public int ProductId { get; set; }
         public ProductDto Product { get; set; }
         public string ProductName { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         public int OrderId { get; set; }
-        public OrderHeaderDto OrderHeader { get; set; }
     }
 }

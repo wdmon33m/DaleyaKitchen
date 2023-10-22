@@ -18,5 +18,6 @@ namespace Daleya.API.Models
         [ForeignKey("OrderHeader")]
         public int OrderId { get; set; }
         public OrderHeader OrderHeader { get; set; }
+        public decimal Price { get; set; }
     }
 }

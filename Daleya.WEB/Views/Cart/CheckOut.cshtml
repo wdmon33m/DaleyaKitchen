@@ -9,7 +9,7 @@
         <input asp-for="CartHeader.Discound" hidden />
         <input asp-for="CartHeader.CartTotal" hidden />
 
-        <div class="border rounded">
+        <div class="border rounded justify-content-between">
             <div class="container bg-primary-subtle row">
                 <div class="bg-secondary justify-content-center bg-gradient col-md-7 col-12">
                     <h1 class="text-white mt-1 text-center">Order Summary</h1>
@@ -19,7 +19,7 @@
                 </div>
                 <br /><br /><br />
                 <hr />
-                <div class="col-7">
+                <div class="col-12 col-md-7">
                     <div class="row pt-2">
                         <div class="col-12 py-2">
                             <input asp-for="CartHeader.FirstName" placeholder="First name..." class="form-control" />
@@ -43,8 +43,8 @@
 
                     </div>
                 </div>
-                <div class="col-5">
-                    <div class="card mt-2">
+                <div class="col-12 col-md-5">
+                    <div class="card bg-primary-subtle border-2 mt-2">
                         <div class="card-body">
                             <div class=" d-none d-lg-block">
                                 <div class="row text-danger">

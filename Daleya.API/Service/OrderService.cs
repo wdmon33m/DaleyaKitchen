@@ -47,10 +47,13 @@ namespace Daleya.API.Service
 
                 orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailsDto>>(cartDto.CartDetails);
 
-                OrderHeader orderHeader = _mapper.Map<OrderHeader>(orderHeaderDto);
-                await _orderHeaderRepository.CreateAsync(orderHeader);
+                OrderHeader orderCreated = _mapper.Map<OrderHeader>(orderHeaderDto);
+                await _orderHeaderRepository.CreateAsync(orderCreated);
+                orderHeaderDto.OrderId = orderCreated.OrderId;
 
-                _response.Result = _mapper.Map<OrderHeaderDto>(orderHeader);
+                orderHeaderDto.OrderDetails = _mapper.Map<IEnumerable<OrderDetailsDto>>(orderCreated.OrderDetails);
+
+                _response.Result = _mapper.Map<OrderHeaderDto>(orderHeaderDto);
                 _response.StatusCode = HttpStatusCode.Created;
             }
             catch (Exception ex)
